@@ -590,7 +590,7 @@ class MOTEvaluator:
         ori_thresh = self.args.track_thresh
         detections = dict()
 
-        for cur_iter, (imgs, _, info_imgs, ids, raw_image) in enumerate(    # [hgx0411] add raw_image for FastReID
+        for cur_iter, (imgs, _, info_imgs, ids) in enumerate(    # [hgx0411] add raw_image for FastReID
                 progress_bar(self.dataloader)
         ):
             with torch.no_grad():

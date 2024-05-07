@@ -33,10 +33,9 @@ class MOTDataset(Dataset):
         """
         super().__init__(img_size)
         if data_dir is None:
-            data_dir = os.path.join(get_yolox_datadir(), "mot")
+            data_dir = os.path.join(get_yolox_datadir(), "dancetrack")
         self.data_dir = data_dir
         self.json_file = json_file
-
         self.coco = COCO(os.path.join(self.data_dir, "annotations", self.json_file))
         self.ids = self.coco.getImgIds()                # image ids, not track ids
         self.class_ids = sorted(self.coco.getCatIds())
