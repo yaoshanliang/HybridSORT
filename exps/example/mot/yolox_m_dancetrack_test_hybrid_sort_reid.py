@@ -12,8 +12,8 @@ class Exp(MyExp):
     def __init__(self):
         super(Exp, self).__init__()
         self.num_classes = 3
-        self.depth = 1.33
-        self.width = 1.25
+        self.depth = 0.67
+        self.width = 0.75
         self.exp_name = os.path.split(os.path.realpath(__file__))[1].split(".")[0]
         self.train_ann = "train.json"
         self.val_ann = "val.json"
@@ -22,7 +22,7 @@ class Exp(MyExp):
         self.input_size = (800, 1440)
         self.test_size = (800, 1440)
         self.random_size = (18, 32)
-        self.max_epoch = 80
+        self.max_epoch = 8
         self.print_interval = 20
         self.eval_interval = 5
         self.test_conf = 0.1
@@ -30,6 +30,27 @@ class Exp(MyExp):
         self.no_aug_epochs = 1
         self.basic_lr_per_img = 0.001 / 64.0
         self.warmup_epochs = 1
+
+        # tracking params for Hybrid-SORT-ReID
+        self.ckpt = "YOLOX_outputs/yolox_m_dancetrack_test_hybrid_sort/latest_ckpt.pth.tar"
+        self.use_byte = True
+        self.dataset = "dancetrack"
+        self.inertia = 0.05
+        self.iou_thresh = 0.15
+        self.asso = "Height_Modulated_IoU"
+        self.TCM_first_step = True
+        self.TCM_byte_step = True
+        self.TCM_first_step_weight = 1.5
+        self.TCM_byte_step_weight = 1.0
+        self.hybrid_sort_with_reid = True
+        self.with_fastreid =True
+        self.EG_weight_high_score= 2.8
+        self.EG_weight_low_score= 1.4
+        self.fast_reid_config = "fast_reid/configs/DanceTrack/sbs_S50.yml"
+        self.fast_reid_weights = "fast_reid/logs/dancetrack/sbs_S50/model_final.pth"
+        self.with_longterm_reid_correction = True
+        self.longterm_reid_correction_thresh = 0.20
+        self.longterm_reid_correction_thresh_low = 1.0
 
     def get_data_loader(self, batch_size, is_distributed, no_aug=False):
         from yolox.data import (

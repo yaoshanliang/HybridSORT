@@ -103,10 +103,10 @@ def main(exp, args, num_gpu):
 
     if not args.speed and not args.trt:
         if args.ckpt is None:
-            ckpt_file = os.path.join(file_name, "best_ckpt.pth.tar")
+            ckpt_file = os.path.join(file_name, "latest_ckpt.pth.tar")
         else:
             ckpt_file = args.ckpt
-        logger.info("loading checkpoint")
+        logger.info("loading checkpoint: ", ckpt_file)
         loc = "cuda:{}".format(rank)
         ckpt = torch.load(ckpt_file, map_location=loc)
         # load the model state dict
@@ -141,22 +141,22 @@ def main(exp, args, num_gpu):
         )
     else:
         *_, summary = evaluator.evaluate_hybrid_sort_reid(
-                args, model, is_distributed, args.fp16, trt_file, decoder, exp.test_size, results_folder
+            args, model, is_distributed, args.fp16, trt_file, decoder, exp.test_size, results_folder
         )
 
     
-    if args.test:
-        # we skip evaluation for inference on test set
-        return 
+    # if args.test:
+    #     # we skip evaluation for inference on test set
+    #     return 
 
-    logger.info("\n" + summary)
+    # logger.info("\n" + summary)
 
     if args.dataset == "dancetrack":
         hota_command = "python3 TrackEval/scripts/run_mot_challenge.py " \
-                       "--SPLIT_TO_EVAL val  " \
-                       "--METRICS HOTA CLEAR Identity " \
-                       "--GT_FOLDER datasets/dancetrack/val " \
-                       "--SEQMAP_FILE datasets/dancetrack/val/val_seqmap.txt " \
+                       "--SPLIT_TO_EVAL test  " \
+                       "--METRICS HOTA CLEAR Identity VACE " \
+                       "--GT_FOLDER /home/shanliang/workspace/dataset/USVTrack/dancetrack/test " \
+                       "--SEQMAP_FILE /home/shanliang/workspace/dataset/USVTrack/dancetrack/test/test_seqmap.txt " \
                        "--SKIP_SPLIT_FOL True " \
                        "--TRACKERS_TO_EVAL '' " \
                        "--TRACKER_SUB_FOLDER ''  " \

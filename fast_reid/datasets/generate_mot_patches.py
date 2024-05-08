@@ -34,9 +34,9 @@ def generate_trajectories(file_path, GroundTrues):
 def make_parser():
     parser = argparse.ArgumentParser("MOTChallenge ReID dataset")
 
-    parser.add_argument("--data_path", default="", help="path to MOT data")
+    parser.add_argument("--data_path", default="/home/shanliang/workspace/dataset/USVTrack", help="path to MOT data")
     parser.add_argument("--save_path", default="fast_reid/datasets", help="Path to save the MOT-ReID dataset")
-    parser.add_argument("--mot", default=17, help="MOTChallenge dataset number e.g. 17, 20")
+    parser.add_argument("--mot", default=20, help="MOTChallenge dataset number e.g. 17, 20")
 
     return parser
 
@@ -52,7 +52,8 @@ def main(args):
     os.makedirs(test_save_path, exist_ok=True)
 
     # Get gt data
-    data_path = os.path.join(args.data_path, 'MOT' + str(args.mot), 'train')
+    # data_path = os.path.join(args.data_path, 'MOT' + str(args.mot), 'train')
+    data_path = os.path.join(args.data_path, 'Tracking', 'train')
 
     if args.mot == '17':
         seqs = [f for f in os.listdir(data_path) if 'FRCNN' in f]

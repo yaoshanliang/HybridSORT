@@ -11,7 +11,7 @@ from yolox.data import get_yolox_datadir
 class Exp(MyExp):
     def __init__(self):
         super(Exp, self).__init__()
-        self.num_classes = 1
+        self.num_classes = 3
         self.depth = 1.33
         self.width = 1.25
         self.exp_name = os.path.split(os.path.realpath(__file__))[1].split(".")[0]
@@ -32,7 +32,7 @@ class Exp(MyExp):
         self.warmup_epochs = 1
 
         # tracking params for Hybrid-SORT-ReID
-        self.ckpt = "pretrained/bytetrack_dance_model.pth.tar"
+        self.ckpt = "YOLOX_outputs/yolox_tiny_mix_usvtrack/best_ckpt.pth.tar"
         self.use_byte = True
         self.dataset = "dancetrack"
         self.inertia = 0.05
@@ -46,8 +46,9 @@ class Exp(MyExp):
         self.with_fastreid =True
         self.EG_weight_high_score= 2.8
         self.EG_weight_low_score= 1.4
-        self.fast_reid_config = "fast_reid/configs/CUHKSYSU_DanceTrack/sbs_S50.yml"
-        self.fast_reid_weights = "pretrained/dancetrack_sbs_S50.pth"
+        self.fast_reid_config = "fast_reid/configs/DanceTrack/sbs_S50.yml"
+        # self.fast_reid_weights = "fast_reid/logs/dancetrack/sbs_S50/model_final.pth"
+        self.fast_reid_weights = "fast_reid/logs/dancetrack/sbs_S50/model_0429.pth"
         self.with_longterm_reid_correction = True
         self.longterm_reid_correction_thresh = 0.20
         self.longterm_reid_correction_thresh_low = 1.0

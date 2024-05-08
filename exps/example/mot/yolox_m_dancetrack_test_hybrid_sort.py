@@ -32,8 +32,7 @@ class Exp(MyExp):
         self.warmup_epochs = 1
 
         # tracking params for Hybrid-SORT
-        self.ckpt = ""
-        # self.ckpt = "YOLOX_outputs/yolox_tiny_mix_usvtrack/best_ckpt.pth.tar"
+        self.ckpt = "YOLOX_outputs/yolox_m_dancetrack_test_hybrid_sort/latest_ckpt.pth.tar"
         self.use_byte = True
         self.dataset = "dancetrack"
         self.inertia = 0.05

@@ -21,7 +21,7 @@ class MotChallenge2DBox(_BaseDataset):
             'TRACKERS_FOLDER': os.path.join(code_path, 'data/trackers/mot_challenge/'),  # Trackers location
             'OUTPUT_FOLDER': None,  # Where to save eval results (if None, same as TRACKERS_FOLDER)
             'TRACKERS_TO_EVAL': None,  # Filenames of trackers to eval (if None, all in folder)
-            'CLASSES_TO_EVAL': ['pedestrian'],  # Valid: ['pedestrian']
+            'CLASSES_TO_EVAL': ['ship', 'boat', 'vessel'],  # Valid: ['pedestrian']
             'BENCHMARK': 'MOT17',  # Valid: 'MOT17', 'MOT16', 'MOT20', 'MOT15'
             'SPLIT_TO_EVAL': 'train',  # Valid: 'train', 'test', 'all'
             'INPUT_AS_ZIP': False,  # Whether tracker input files are zipped
@@ -68,14 +68,12 @@ class MotChallenge2DBox(_BaseDataset):
         self.output_sub_fol = self.config['OUTPUT_SUB_FOLDER']
 
         # Get classes to eval
-        self.valid_classes = ['pedestrian']
+        self.valid_classes = ['ship', 'boat', 'vessel']
         self.class_list = [cls.lower() if cls.lower() in self.valid_classes else None
                            for cls in self.config['CLASSES_TO_EVAL']]
         if not all(self.class_list):
             raise TrackEvalException('Attempted to evaluate an invalid class. Only pedestrian class is valid.')
-        self.class_name_to_class_id = {'pedestrian': 1, 'person_on_vehicle': 2, 'car': 3, 'bicycle': 4, 'motorbike': 5,
-                                       'non_mot_vehicle': 6, 'static_person': 7, 'distractor': 8, 'occluder': 9,
-                                       'occluder_on_ground': 10, 'occluder_full': 11, 'reflection': 12, 'crowd': 13}
+        self.class_name_to_class_id = {'ship': 0, 'boat': 1, 'vessel': 2}
         self.valid_class_numbers = list(self.class_name_to_class_id.values())
 
         # Get sequences to eval and check gt files exist
@@ -323,6 +321,7 @@ class MotChallenge2DBox(_BaseDataset):
         self._check_unique_ids(raw_data)
 
         distractor_class_names = ['person_on_vehicle', 'static_person', 'distractor', 'reflection']
+        distractor_class_names = []
         if self.benchmark == 'MOT20':
             distractor_class_names.append('non_mot_vehicle')
         distractor_classes = [self.class_name_to_class_id[x] for x in distractor_class_names]

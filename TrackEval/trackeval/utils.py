@@ -97,10 +97,10 @@ def write_summary_results(summaries, cls, output_folder):
     fields = list(default_ordered_dict.keys())
     values = list(default_ordered_dict.values())
 
-    out_file = os.path.join(output_folder, cls + '_summary.txt')
+    out_file = os.path.join(output_folder, cls + '_summary.csv')
     os.makedirs(os.path.dirname(out_file), exist_ok=True)
     with open(out_file, 'w', newline='') as f:
-        writer = csv.writer(f, delimiter=' ')
+        writer = csv.writer(f, delimiter=',')
         writer.writerow(fields)
         writer.writerow(values)
 
