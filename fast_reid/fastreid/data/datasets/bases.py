@@ -133,7 +133,6 @@ class Dataset(object):
         """
         if isinstance(required_files, str):
             required_files = [required_files]
-
         for fpath in required_files:
             if not os.path.exists(fpath):
                 raise RuntimeError('"{}" is not found'.format(fpath))

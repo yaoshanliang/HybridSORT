@@ -292,7 +292,7 @@ _C.SOLVER.CLIP_GRADIENTS.NORM_TYPE = 2.0
 
 _C.TEST = CN()
 
-_C.TEST.EVAL_PERIOD = 20
+_C.TEST.EVAL_PERIOD = 2000
 
 # Number of images per batch across all machines.
 _C.TEST.IMS_PER_BATCH = 64

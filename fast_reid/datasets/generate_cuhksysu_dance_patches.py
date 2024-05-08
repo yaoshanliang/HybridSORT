@@ -10,8 +10,8 @@ import json
 def make_parser():
     parser = argparse.ArgumentParser("dancetrack reid dataset")
 
-    parser.add_argument("--data_path", default="datasets", help="path to dancetrack data")
-    parser.add_argument("--save_path", default="fast_reid/datasets", help="Path to save the dancetrack-reid dataset")
+    parser.add_argument("--data_path", default="/home/shanliang/workspace/dataset/USVTrack", help="path to dancetrack data")
+    parser.add_argument("--save_path", default="/home/shanliang/workspace/dataset/USVTrack/dancetrack", help="Path to save the dancetrack-reid dataset")
 
     return parser
 
@@ -30,10 +30,10 @@ def generate_trajectories(file_path, GroundTrues):
 
     values = np.array(values, np.float_)
 
-    if GroundTrues:     # filter objects
+    # if GroundTrues:     # filter objects
         # values = values[values[:, 6] == 1, :]  # Remove ignore objects, only active objects
         # values = values[values[:, 7] == 1, :]  # Pedestrian only
-        values = values[values[:, 8] > 0.4, :]  # visibility only
+        # values = values[values[:, 8] > 0.4, :]  # visibility only
 
     values = np.array(values)
     values[:, 4] += values[:, 2]        # tlwh to tlbr
@@ -44,7 +44,7 @@ def generate_trajectories(file_path, GroundTrues):
 def main_dancetrack(args):
     # NOTE: id starts from 0.
     # Create folder for outputs
-    save_path = os.path.join(args.save_path, 'cuhksysu-dancetrack-reid')
+    save_path = os.path.join(args.save_path, 'dancetrack-reid')
     os.makedirs(save_path, exist_ok=True)
     train_save_path = os.path.join(save_path, 'bounding_box_train')
     os.makedirs(train_save_path, exist_ok=True)
@@ -52,7 +52,7 @@ def main_dancetrack(args):
     os.makedirs(test_save_path, exist_ok=True)
 
     # Get gt data
-    data_path = os.path.join(args.data_path, 'dancetrack', 'train')
+    data_path = os.path.join(args.data_path, 'dancetrack', 'test')
 
     seqs = os.listdir(data_path)
 
@@ -104,7 +104,7 @@ def main_dancetrack(args):
                 fileName = (str(id_+id_offset)).zfill(7) + '_' + seq[-4:] + '_' + (str(f+1)).zfill(7) + '_acc_data.bmp'
 
 
-                cv2.imwrite(os.path.join(train_save_path, fileName), patch)
+                cv2.imwrite(os.path.join(test_save_path, fileName), patch)
 
         id_offset += max_id_per_seq
     return id_offset        # just add as above
@@ -172,4 +172,4 @@ def main_cuhksysu(args, id_offset, seq_offset=1000):
 if __name__ == "__main__":
     args = make_parser().parse_args()
     id_offset = main_dancetrack(args)                   # dancetrack
-    main_cuhksysu(args, id_offset, seq_offset=1000)     # cuhksysu
+    # main_cuhksysu(args, id_offset, seq_offset=1000)     # cuhksysu

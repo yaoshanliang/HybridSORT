@@ -216,7 +216,6 @@ class DefaultTrainer(TrainerBase):
         self._trainer = (AMPTrainer if cfg.SOLVER.AMP.ENABLED else SimpleTrainer)(
             model, data_loader, optimizer, param_wrapper
         )
-
         self.iters_per_epoch = len(data_loader.dataset) // cfg.SOLVER.IMS_PER_BATCH
         self.scheduler = self.build_lr_scheduler(cfg, optimizer, self.iters_per_epoch)
 
@@ -379,7 +378,8 @@ class DefaultTrainer(TrainerBase):
         It now calls :func:`fastreid.solver.build_optimizer`.
         Overwrite it if you'd like a different optimizer.
         """
-        return build_optimizer(cfg, model)
+        # return build_optimizer(cfg, model)
+        return build_optimizer(cfg, model, contiguous=False)
 
     @classmethod
     def build_lr_scheduler(cls, cfg, optimizer, iters_per_epoch):

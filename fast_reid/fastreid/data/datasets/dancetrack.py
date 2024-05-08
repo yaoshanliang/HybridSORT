@@ -23,13 +23,13 @@ class DanceTrack(ImageDataset):
         - images: ?
     """
     _junk_pids = [0, -1]
-    dataset_dir = ''
+    dataset_dir = 'dancetrack'
     dataset_url = ''
     dataset_name = "DanceTrack"
 
     def __init__(self, root='datasets', **kwargs):
         # self.root = osp.abspath(osp.expanduser(root))
-        self.root = root
+        self.root = '/home/shanliang/workspace/dataset/USVTrack'
         self.dataset_dir = osp.join(self.root, self.dataset_dir)
 
         # allow alternative directory structure
@@ -59,8 +59,9 @@ class DanceTrack(ImageDataset):
 
         train = lambda: self.process_dir(self.train_dir)
         query = lambda: self.process_dir(self.query_dir, is_train=False)
-        gallery = lambda: self.process_dir(self.gallery_dir, is_train=False) + \
-                          (self.process_dir(self.extra_gallery_dir, is_train=False) if self.extra_gallery else [])
+        # gallery = lambda: self.process_dir(self.gallery_dir, is_train=False) + \
+                        #   (self.process_dir(self.extra_gallery_dir, is_train=False) if self.extra_gallery else [])
+        gallery = lambda: self.process_dir(self.gallery_dir, is_train=False)
 
         super(DanceTrack, self).__init__(train, query, gallery, **kwargs)
 
@@ -68,7 +69,6 @@ class DanceTrack(ImageDataset):
 
         img_paths = glob.glob(osp.join(dir_path, '*.bmp'))
         pattern = re.compile(r'([-\d]+)_([-\d]+)')
-
         data = []
         for img_path in img_paths:
             pid, camid = map(int, pattern.search(img_path).groups())

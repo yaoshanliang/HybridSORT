@@ -89,12 +89,15 @@ class FastReIDInterface:
             tlbr[2] = min(W - 1, tlbr[2])       # clamp
             tlbr[3] = min(H - 1, tlbr[3])       # clamp
             patch = image[tlbr[1]:tlbr[3], tlbr[0]:tlbr[2], :]      # crop image, BGR
-
             # the model expects RGB inputs
             patch = patch[:, :, ::-1]
 
             # Apply pre-processing to image.
-            patch = cv2.resize(patch, tuple(self.cfg.INPUT.SIZE_TEST[::-1]), interpolation=cv2.INTER_LINEAR)    # [384, 128, 3]
+            try:
+                patch = cv2.resize(patch, tuple(self.cfg.INPUT.SIZE_TEST[::-1]), interpolation=cv2.INTER_LINEAR)    # [384, 128, 3]
+            except:
+                print('tlbr: ', tlbr, tlbr[0], tlbr[1], tlbr[2], tlbr[3])
+                return np.array([]).reshape(0, 2048)
             # patch, scale = preprocess(patch, self.cfg.INPUT.SIZE_TEST[::-1])
 
             # plt.figure()
