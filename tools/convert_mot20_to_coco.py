@@ -5,9 +5,9 @@ import cv2
 
 
 # Use the same script for MOT16
-DATA_PATH = 'datasets/MOT20'
+DATA_PATH = '/home/shanliang/workspace/dataset/USVTrack/Tracking'
 OUT_PATH = os.path.join(DATA_PATH, 'annotations')
-SPLITS = ['train_half', 'val_half', 'train', 'test']  # --> split training data to train_half and val_half.
+SPLITS = ['train', 'test']  # --> split training data to train_half and val_half.
 HALF_VIDEO = True
 CREATE_SPLITTED_ANN = True
 CREATE_SPLITTED_DET = True
@@ -25,7 +25,11 @@ if __name__ == '__main__':
             data_path = os.path.join(DATA_PATH, 'train')
         out_path = os.path.join(OUT_PATH, '{}.json'.format(split))
         out = {'images': [], 'annotations': [], 'videos': [],
-               'categories': [{'id': 1, 'name': 'pedestrian'}]}
+               'categories': [
+                   {'id': 0, 'name': 'ship'},
+                   {'id': 1, 'name': 'boat'},
+                   {'id': 2, 'name': 'vessel'}
+                ]}
         seqs = os.listdir(data_path)
         image_cnt = 0
         ann_cnt = 0
@@ -49,12 +53,49 @@ if __name__ == '__main__':
             else:
                 image_range = [0, num_images - 1]
 
-            for i in range(num_images):
-                if i < image_range[0] or i > image_range[1]:
-                    continue
-                img = cv2.imread(os.path.join(data_path, '{}/img1/{:06d}.jpg'.format(seq, i + 1)))
-                height, width = img.shape[:2]
-                image_info = {'file_name': '{}/img1/{:06d}.jpg'.format(seq, i + 1),  # image name.
+            # for i in range(num_images):
+            #     if i < image_range[0] or i > image_range[1]:
+            #         continue
+                # img = cv2.imread(os.path.join(data_path, '{}/img1/{:06d}.jpg'.format(seq, i + 1)))
+                # height, width = img.shape[:2]
+                # image_info = {'file_name': '{}/img1/{:06d}.jpg'.format(seq, i + 1),  # image name.
+                #               'id': image_cnt + i + 1,  # image number in the entire training set.
+                #               'frame_id': i + 1 - image_range[0],  # image number in the video sequence, starting from 1.
+                #               'prev_image_id': image_cnt + i if i > 0 else -1,  # image number in the entire training set.
+                #               'next_image_id': image_cnt + i + 2 if i < num_images - 1 else -1,
+                #               'video_id': video_cnt,
+                #               'height': height, 'width': width}
+
+                # img = cv2.imread(os.path.join(data_path, '{}/img1/{:06d}.jpg'.format(seq, i + 1)))
+                # height, width = img.shape[:2]
+                # image_info = {'file_name': '{}/img1/{:06d}.jpg'.format(seq, i + 1),  # image name.
+                #               'id': image_cnt + i + 1,  # image number in the entire training set.
+                #               'frame_id': i + 1 - image_range[0],  # image number in the video sequence, starting from 1.
+                #               'prev_image_id': image_cnt + i if i > 0 else -1,  # image number in the entire training set.
+                #               'next_image_id': image_cnt + i + 2 if i < num_images - 1 else -1,
+                #               'video_id': video_cnt,
+                #               'height': height, 'width': width}
+                # out['images'].append(image_info)
+
+            for i, image in enumerate(sorted(images)):
+                image_id = image[0:16]
+                # img = cv2.imread(os.path.join(data_path, '{}/img1/{}.jpg'.format(seq, image_id)))
+                # height, width = img.shape[:2]
+                # height = 1080
+                # width = 1920
+                # image_info = {'file_name': '{}/img1/{}.jpg'.format(seq, image_id),  # image name.
+                #               'id': image_cnt + i + 1,  # image number in the entire training set.
+                #               'frame_id': i + 1 - image_range[0],  # image number in the video sequence, starting from 1.
+                #               'prev_image_id': image_cnt + i if i > 0 else -1,  # image number in the entire training set.
+                #               'next_image_id': image_cnt + i + 2 if i < num_images - 1 else -1,
+                #               'video_id': video_cnt,
+                #               'height': height, 'width': width}
+
+                # img = cv2.imread(os.path.join(data_path, '{}/img1/{}.jpg'.format(seq, image_id)))
+                # height, width = img.shape[:2]
+                height = 1080
+                width = 1920
+                image_info = {'file_name': '{}/{}/img1/{}.jpg'.format(split, seq, image_id),  # image name.
                               'id': image_cnt + i + 1,  # image number in the entire training set.
                               'frame_id': i + 1 - image_range[0],  # image number in the video sequence, starting from 1.
                               'prev_image_id': image_cnt + i if i > 0 else -1,  # image number in the entire training set.
@@ -62,9 +103,12 @@ if __name__ == '__main__':
                               'video_id': video_cnt,
                               'height': height, 'width': width}
                 out['images'].append(image_info)
+
+
             print('{}: {} images'.format(seq, num_images))
-            if split != 'test':
+            if split != 'val':
                 det_path = os.path.join(seq_path, 'det/det.txt')
+                # det_path = os.path.join('/home/shanliang/workspace/dataset/USVTrack', seq_path, 'det/det.txt')
                 anns = np.loadtxt(ann_path, dtype=np.float32, delimiter=',')
                 dets = np.loadtxt(det_path, dtype=np.float32, delimiter=',')
                 if CREATE_SPLITTED_ANN and ('half' in split):
@@ -100,25 +144,25 @@ if __name__ == '__main__':
                     track_id = int(anns[i][1])
                     cat_id = int(anns[i][7])
                     ann_cnt += 1
-                    if not ('15' in DATA_PATH):
-                        #if not (float(anns[i][8]) >= 0.25):  # visibility.
-                            #continue
-                        if not (int(anns[i][6]) == 1):  # whether ignore.
-                            continue
-                        if int(anns[i][7]) in [3, 4, 5, 6, 9, 10, 11]:  # Non-person
-                            continue
-                        if int(anns[i][7]) in [2, 7, 8, 12]:  # Ignored person
-                            #category_id = -1
-                            continue
-                        else:
-                            category_id = 1  # pedestrian(non-static)
-                            if not track_id == tid_last:
-                                tid_curr += 1
-                                tid_last = track_id
-                    else:
-                        category_id = 1
+                    # if not ('15' in DATA_PATH):
+                    #     #if not (float(anns[i][8]) >= 0.25):  # visibility.
+                    #         #continue
+                    #     if not (int(anns[i][6]) == 1):  # whether ignore.
+                    #         continue
+                    #     if int(anns[i][7]) in [3, 4, 5, 6, 9, 10, 11]:  # Non-person
+                    #         continue
+                    #     if int(anns[i][7]) in [2, 7, 8, 12]:  # Ignored person
+                    #         #category_id = -1
+                    #         continue
+                    #     else:
+                    #         category_id = 1  # pedestrian(non-static)
+                    #         if not track_id == tid_last:
+                    #             tid_curr += 1
+                    #             tid_last = track_id
+                    # else:
+                    #     category_id = 1
                     ann = {'id': ann_cnt,
-                           'category_id': category_id,
+                           'category_id': cat_id,
                            'image_id': image_cnt + frame_id,
                            'track_id': tid_curr,
                            'bbox': anns[i][2:6].tolist(),

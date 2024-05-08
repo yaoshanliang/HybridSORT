@@ -186,7 +186,10 @@ def image_demo(predictor, vis_folder, current_time, args):
             cv2.imwrite(osp.join(save_folder, osp.basename(img_path)), online_im)
             save_folder_detection = osp.join(save_folder , "detection")
             os.makedirs(save_folder_detection, exist_ok=True)
-            cv2.imwrite(osp.join(save_folder_detection, osp.basename(img_path)), online_im_detection)
+
+            # Fixed bug for no detection results
+            if outputs[0] is not None:
+                cv2.imwrite(osp.join(save_folder_detection, osp.basename(img_path)), online_im_detection)
 
         if frame_id % 20 == 0:
             logger.info('Processing frame {} ({:.2f} fps)'.format(frame_id, 1. / max(1e-5, timer.average_time)))
@@ -348,6 +351,7 @@ def main(exp, args):
 
 if __name__ == "__main__":
     args = make_parser().parse_args()
+    args.batch_size = 2
     exp = get_exp(args.exp_file, args.name)
 
     args_merge_params_form_exp(args, exp)
