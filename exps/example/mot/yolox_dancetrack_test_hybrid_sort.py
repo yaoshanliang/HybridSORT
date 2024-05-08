@@ -23,7 +23,7 @@ class Exp(MyExp):
         self.test_size = (800, 1440)
         self.random_size = (18, 32)
         self.max_epoch = 80
-        self.print_interval = 2000
+        self.print_interval = 100
         self.eval_interval = 5
         self.test_conf = 0.1
         self.nmsthre = 0.7
