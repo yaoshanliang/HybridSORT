@@ -1,3 +1,92 @@
+
+## Installation
+numpy==1.23.5
+
+`fast_reid/fastreid/data/datasets/dancetrack.py`
+self.root = '/home/shanliang/workspace/dataset/USVTrack'
+
+## Train detection
+```
+CUDA_VISIBLE_DEVICES=0 python tools/train.py -f exps/example/mot/yolox_tiny_mix_usvtrack.py
+CUDA_VISIBLE_DEVICES=0 python tools/train.py -f exps/example/mot/yolox_dancetrack_test_hybrid_sort.py
+CUDA_VISIBLE_DEVICES=0 python tools/train.py -f exps/example/mot/yolox_m_dancetrack_test_hybrid_sort.py
+```
+
+Set 'contiguous=False' in line 380 of defaults.py
+
+return build_optimizer(cfg, model)
+# convert to
+return build_optimizer(cfg, model, contiguous=False)
+
+
+
+## Train re-ID
+```
+CUDA_VISIBLE_DEVICES=0 python fast_reid/tools/train_net.py --config-file ./fast_reid/configs/DanceTrack/sbs_S50.yml MODEL.DEVICE "cuda:0"
+```
+
+## Evaluate re-ID
+```
+CUDA_VISIBLE_DEVICES=0 python fast_reid/tools/train_net.py --config-file ./fast_reid/configs/DanceTrack/sbs_S50.yml --eval-only MODEL.WEIGHTS fast_reid/logs/dancetrack/sbs_S50/model_final.pth MODEL.DEVICE "cuda:0"
+```
+  File "/home/shanliang/workspace/code/HybridSORT/fast_reid/fastreid/engine/defaults.py", line 441, in test
+    results_i = inference_on_dataset(model, data_loader, evaluator, flip_test=cfg.TEST.FLIP.ENABLED)
+  File "/home/shanliang/workspace/code/HybridSORT/fast_reid/fastreid/evaluation/evaluator.py", line 156, in inference_on_dataset
+    results = evaluator.evaluate()
+  File "/home/shanliang/workspace/code/HybridSORT/fast_reid/fastreid/evaluation/reid_evaluation.py", line 107, in evaluate
+    cmc, all_AP, all_INP = evaluate_rank(dist, query_pids, gallery_pids, query_camids, gallery_camids)
+  File "/home/shanliang/workspace/code/HybridSORT/fast_reid/fastreid/evaluation/rank.py", line 198, in evaluate_rank
+    return evaluate_cy(distmat, q_pids, g_pids, q_camids, g_camids, max_rank, use_metric_cuhk03)
+  File "rank_cy.pyx", line 20, in rank_cy.evaluate_cy
+  File "rank_cy.pyx", line 28, in rank_cy.evaluate_cy
+  File "rank_cy.pyx", line 240, in rank_cy.eval_market1501_cy
+AssertionError: Error: all query identities do not appear in gallery
+
+### Validation
+#### HybridSORT
+* -b 只能设置为1
+* 如何提高batchsize
+```
+CUDA_VISIBLE_DEVICES=0 python tools/run_hybrid_sort_dance.py --test -f exps/example/mot/yolox_m_dancetrack_test_hybrid_sort.py -b 1 -d 1 --fp16 
+
+CUDA_VISIBLE_DEVICES=0 python tools/run_hybrid_sort_dance.py --test -f exps/example/mot/yolox_m_dancetrack_test_hybrid_sort_reid.py -b 1 -d 1 --fp16 
+```
+
+/home/shanliang/workspace/code/HybridSORT/trackers/hybrid_sort_tracker/hybrid_sort.py
+try:
+                trk[:] = [pos[0][0], pos[0][1], pos[0][2], pos[0][3], kalman_score, simple_score[0]]
+            except:
+                trk[:] = [pos[0][0], pos[0][1], pos[0][2], pos[0][3], kalman_score[0], simple_score]
+
+
+#### HybridSORT-ReID
+```
+CUDA_VISIBLE_DEVICES=0 python tools/run_hybrid_sort_dance.py --test -f exps/example/mot/yolox_m_dancetrack_test_hybrid_sort_reid.py -b 1 -d 1 --fp16
+```
+
+  File "/home/shanliang/workspace/code/HybridSORT/trackers/hybrid_sort_tracker/hybrid_sort.py", line 343, in update
+    trk[:] = [pos[0][0], pos[0][1], pos[0][2], pos[0][3], kalman_score, simple_score]
+    │         │          │          │          │          │             └ 0.6
+    │         │          │          │          │          └ array([0.7804606])
+    │         │          │          │          └ array([[-25.9786184 , 430.7565914 , 271.99834039, 570.19738809,
+    │         │          │          │                      0.7804606 ]])
+    │         │          │          └ array([[-25.9786184 , 430.7565914 , 271.99834039, 570.19738809,
+    │         │          │                      0.7804606 ]])
+    │         │          └ array([[-25.9786184 , 430.7565914 , 271.99834039, 570.19738809,
+    │         │                      0.7804606 ]])
+    │         └ array([[-25.9786184 , 430.7565914 , 271.99834039, 570.19738809,
+    │                     0.7804606 ]])
+    └ array([0., 0., 0., 0., 0., 0.])
+
+ValueError: setting an array element with a sequence. The requested array would exceed the maximum number of dimension of 1.
+
+
+### Demo
+
+python3 tools/demo_track.py --demo_type image -f exps/example/mot/yolox_m_dancetrack_test_hybrid_sort.py -c YOLOX_outputs/yolox_tiny_mix_usvtrack/best_ckpt.pth.tar --path /home/shanliang/workspace/dataset/USVTrack/dancetrack/test/6/img1 --fp16 --fuse --save_result
+
+---
+
 # Hybrid-SORT
 
  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![test](https://img.shields.io/static/v1?label=By&message=Pytorch&color=red)
@@ -66,6 +155,7 @@ git clone https://github.com/ymzis69/HybridSORT.git
 cd HybridSORT
 pip3 install -r requirements.txt
 python3 setup.py develop
+# pip3 install --upgrade protobuf==3.20.1
 ```
 
 Step2. Install [pycocotools](https://github.com/cocodataset/cocoapi).

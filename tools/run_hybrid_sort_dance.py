@@ -154,7 +154,7 @@ def main(exp, args, num_gpu):
     if args.dataset == "dancetrack":
         hota_command = "python3 TrackEval/scripts/run_mot_challenge.py " \
                        "--SPLIT_TO_EVAL test  " \
-                       "--METRICS HOTA CLEAR Identity VACE " \
+                       "--METRICS HOTA CLEAR Identity " \
                        "--GT_FOLDER /home/shanliang/workspace/dataset/USVTrack/dancetrack/test " \
                        "--SEQMAP_FILE /home/shanliang/workspace/dataset/USVTrack/dancetrack/test/test_seqmap.txt " \
                        "--SKIP_SPLIT_FOL True " \
