@@ -19,12 +19,12 @@ class Exp(MyExp):
         self.val_ann = "val.json"
         self.test_ann = "test.json"
         
-        self.input_size = (800, 1440)
-        self.test_size = (800, 1440)
+        self.input_size = (640, 640)
+        self.test_size = (640, 640)
         self.random_size = (18, 32)
         self.max_epoch = 300
-        self.print_interval = 2000
-        self.eval_interval = 30
+        self.print_interval = 100
+        self.eval_interval = 20
         self.test_conf = 0.1
         self.nmsthre = 0.7
         self.no_aug_epochs = 1
@@ -32,7 +32,8 @@ class Exp(MyExp):
         self.warmup_epochs = 1
 
         # tracking params for Hybrid-SORT
-        self.ckpt = "YOLOX_outputs/yolox_m_dancetrack_test_hybrid_sort/latest_ckpt.pth.tar"
+        # self.ckpt = "YOLOX_outputs/yolox_m_dancetrack_test_hybrid_sort/best_ckpt.pth.tar"
+        self.ckpt = "/gpfs/work/cpt/shanliangyao19/code/yolox/YOLOX_outputs/USVTrack_0508/best_ckpt.pth"
         self.use_byte = True
         self.dataset = "dancetrack"
         self.inertia = 0.05

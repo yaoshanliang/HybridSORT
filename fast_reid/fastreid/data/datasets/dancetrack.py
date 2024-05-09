@@ -29,7 +29,7 @@ class DanceTrack(ImageDataset):
 
     def __init__(self, root='datasets', **kwargs):
         # self.root = osp.abspath(osp.expanduser(root))
-        self.root = '/home/shanliang/workspace/dataset/USVTrack'
+        self.root = '/gpfs/work/cpt/shanliangyao19/dataset/USVTrack/'
         self.dataset_dir = osp.join(self.root, self.dataset_dir)
 
         # allow alternative directory structure

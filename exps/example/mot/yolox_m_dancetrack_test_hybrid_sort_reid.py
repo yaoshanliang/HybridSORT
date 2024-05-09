@@ -19,8 +19,8 @@ class Exp(MyExp):
         self.val_ann = "val.json"
         self.test_ann = "test.json"
         
-        self.input_size = (800, 1440)
-        self.test_size = (800, 1440)
+        self.input_size = (640, 640)
+        self.test_size = (640, 640)
         self.random_size = (18, 32)
         self.max_epoch = 8
         self.print_interval = 20
@@ -32,7 +32,7 @@ class Exp(MyExp):
         self.warmup_epochs = 1
 
         # tracking params for Hybrid-SORT-ReID
-        self.ckpt = "YOLOX_outputs/yolox_m_dancetrack_test_hybrid_sort/latest_ckpt.pth.tar"
+        self.ckpt = "YOLOX_outputs/yolox_m_dancetrack_test_hybrid_sort/best_ckpt.pth.tar"
         self.use_byte = True
         self.dataset = "dancetrack"
         self.inertia = 0.05

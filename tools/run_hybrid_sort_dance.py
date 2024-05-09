@@ -103,7 +103,7 @@ def main(exp, args, num_gpu):
 
     if not args.speed and not args.trt:
         if args.ckpt is None:
-            ckpt_file = os.path.join(file_name, "latest_ckpt.pth.tar")
+            ckpt_file = os.path.join(file_name, "best_ckpt.pth.tar")
         else:
             ckpt_file = args.ckpt
         logger.info("loading checkpoint: ", ckpt_file)
@@ -155,8 +155,8 @@ def main(exp, args, num_gpu):
         hota_command = "python3 TrackEval/scripts/run_mot_challenge.py " \
                        "--SPLIT_TO_EVAL test  " \
                        "--METRICS HOTA CLEAR Identity " \
-                       "--GT_FOLDER /home/shanliang/workspace/dataset/USVTrack/dancetrack/test " \
-                       "--SEQMAP_FILE /home/shanliang/workspace/dataset/USVTrack/dancetrack/test/test_seqmap.txt " \
+                       "--GT_FOLDER /gpfs/work/cpt/shanliangyao19/dataset/USVTrack/dancetrack/test " \
+                       "--SEQMAP_FILE /gpfs/work/cpt/shanliangyao19/dataset/USVTrack/dancetrack/test/test_seqmap.txt " \
                        "--SKIP_SPLIT_FOL True " \
                        "--TRACKERS_TO_EVAL '' " \
                        "--TRACKER_SUB_FOLDER ''  " \

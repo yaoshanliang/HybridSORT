@@ -2,8 +2,15 @@
 ## Installation
 numpy==1.23.5
 
+`yolox/data/dataloading.py`
+yolox_datadir = "/gpfs/work/cpt/shanliangyao19/dataset/USVTrack"
+
 `fast_reid/fastreid/data/datasets/dancetrack.py`
-self.root = '/home/shanliang/workspace/dataset/USVTrack'
+self.root = '/gpfs/work/cpt/shanliangyao19/dataset/USVTrack'
+
+`run_hybrid_sort_dance.py`
+--GT_FOLDER /gpfs/work/cpt/shanliangyao19/dataset/USVTrack/dancetrack/test
+-SEQMAP_FILE /gpfs/work/cpt/shanliangyao19/dataset/USVTrack/dancetrack/test/test_seqmap.txt
 
 ## Train detection
 ```

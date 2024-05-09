@@ -18,7 +18,7 @@ def get_yolox_datadir():
     this function will return value of the environment variable. Otherwise, use data
     """
     # yolox_datadir = os.getenv("YOLOX_DATADIR", "None")
-    yolox_datadir = "/home/shanliang/workspace/dataset/USVTrack"
+    yolox_datadir = "/gpfs/work/cpt/shanliangyao19/dataset/USVTrack"
     if yolox_datadir is None:
         import yolox
 
