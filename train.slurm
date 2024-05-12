@@ -15,8 +15,10 @@ module load anaconda3
 source activate hybridsort39
 
 # Train detection model
-python tools/train.py -f exps/example/mot/yolox_m_dancetrack_test_hybrid_sort.py
+# python tools/train.py -f exps/example/mot/yolox_m_dancetrack_test_hybrid_sort.py
 
+# Eval
+python tools/eval.py -f exps/example/mot/yolox_m_dancetrack_test_hybrid_sort.py -c YOLOX_outputs/yolox_m_dancetrack_test_hybrid_sort/best_ckpt.pth.tar
 
 # Train re-ID model
 # python fast_reid/tools/train_net.py --config-file ./fast_reid/configs/DanceTrack/sbs_S50.yml

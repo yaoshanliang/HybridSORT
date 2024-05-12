@@ -121,9 +121,9 @@ def main(exp, args, num_gpu):
             model, is_distributed, args.fp16, trt_file, decoder, exp.test_size, results_folder
     )
     
-    if args.test:
-        # we skip evaluation for inference on test set
-        return 
+    # if args.test:
+    #     # we skip evaluation for inference on test set
+    #     return 
 
     # if we evaluate on validation set, 
     logger.info("\n" + summary)
